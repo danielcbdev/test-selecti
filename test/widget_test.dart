@@ -5,26 +5,53 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'widget_test.mocks.dart';
 
-import 'package:test_selecti/main.dart';
 
-void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+Future fetchFromDatabase(http.Client client) async {
+  final response =
+  await client.get(Uri.parse('https://jsonplaceholder.typicode.com/users/'));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw Exception('exception occured!!!!!!');
+  }
+}
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+@GenerateMocks([
+  MockitoTest
+], customMocks: [
+  MockSpec<MockitoTest>(as: #MockMockitoExampleRelaxed, returnNullOnMissingStub: true),
+])
+void main(){
+  test('verifica se o retorno é um map', () async {
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    late MockitoTest mockitoExample = MockMockitoTest();
+
+    when(mockitoExample.getResponse())
+    .thenReturn({"title": "test"});
+
+    expect(mockitoExample.getResponse(), isA<Map>());
   });
+}
+
+class MockitoTest {
+  Map<String, dynamic>? getResponse() => test();
+
+  Map<String, dynamic>? test() {
+    Future<http.Response> response = http.get(Uri.parse("https://jsonplaceholder.typicode.com/users/"));
+    response.then((value) {
+      if (value.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(value.body);
+        return data;
+      }
+    });
+  }
 }
