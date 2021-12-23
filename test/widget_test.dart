@@ -5,26 +5,51 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:test_selecti/model/user_model.dart';
+import 'package:test_selecti/repository/login_repository.dart';
+import 'package:test_selecti/viewmodel/login_viewmodel.dart';
+import 'widget_test.mocks.dart';
 
-import 'package:test_selecti/main.dart';
+@GenerateMocks([
+  LoginRepository,
+  LoginViewModel,
+], customMocks: [
+  MockSpec<LoginRepository>(as: #MockMockitoExampleRelaxed, returnNullOnMissingStub: true),
+])
+void main(){
+  test('verifica se o retorno é um map', () async {
 
-void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    late LoginRepository loginRepository = MockLoginRepository();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    when(loginRepository.getResponse("email.com", "123"))
+        .thenReturn({"title": "test"});
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    expect(loginRepository.getResponse("email.com", "123"), isA<Map>());
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  test('verifica se retorna uma senha falsa', () async {
+
+    late LoginRepository loginRepository = MockLoginRepository();
+
+    when(loginRepository.getResponse("email.com", "123"))
+        .thenReturn({"message": "senha invalida"});
+
+    expect(loginRepository.getResponse("email.com", "123"), {"message": "senha invalida"});
+  });
+
+  test('verifica o parse é realizado', () async {
+
+    late LoginViewModel loginViewModel = MockLoginViewModel();
+
+    String email = "test@email.com";
+    String password = "123";
+
+    when(loginViewModel.login(email, password))
+        .thenReturn(UserModel.fromJson({"id": "123", "name": "test", "username": "test", "email": "test@email.com"}));
+
+    expect(loginViewModel.login(email, password), isA<UserModel>());
   });
 }
