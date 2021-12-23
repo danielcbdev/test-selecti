@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class LoginRepository {
-  Map<String, dynamic>? getResponse(){
+  Map<String, dynamic>? getResponse(String email, String password){
     Map<String, dynamic> map = {
-      "email": "email.com",
-      "password": "123456",
+      "email": email,
+      "password": password,
     };
     try{
       Future<http.Response> response = http.post(

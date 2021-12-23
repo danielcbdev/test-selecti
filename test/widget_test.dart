@@ -24,27 +24,27 @@ void main(){
 
     late LoginRepository loginRepository = MockLoginRepository();
 
-    when(loginRepository.getResponse())
+    when(loginRepository.getResponse("email.com", "123"))
         .thenReturn({"title": "test"});
 
-    expect(loginRepository.getResponse(), isA<Map>());
+    expect(loginRepository.getResponse("email.com", "123"), isA<Map>());
   });
 
   test('verifica se retorna uma senha falsa', () async {
 
     late LoginRepository loginRepository = MockLoginRepository();
 
-    when(loginRepository.getResponse())
+    when(loginRepository.getResponse("email.com", "123"))
         .thenReturn({"message": "senha invalida"});
 
-    expect(loginRepository.getResponse(), {"message": "senha invalida"});
+    expect(loginRepository.getResponse("email.com", "123"), {"message": "senha invalida"});
   });
 
   test('verifica o parse é realizado', () async {
 
     late LoginViewModel loginViewModel = MockLoginViewModel();
 
-    String email = "daniel@email.com";
+    String email = "test@email.com";
     String password = "123";
 
     when(loginViewModel.login(email, password))

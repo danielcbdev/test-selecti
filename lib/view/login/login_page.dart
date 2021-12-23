@@ -3,6 +3,7 @@ import 'package:test_selecti/shared/components/primary_button.dart';
 import 'package:test_selecti/shared/components/primary_text_field.dart';
 import 'package:test_selecti/shared/theme/app_colors.dart';
 import 'package:test_selecti/utils/utils.dart';
+import 'package:test_selecti/view/home/home_page.dart';
 import 'package:test_selecti/viewmodel/login_viewmodel.dart';
 
 class LoginPage extends StatefulWidget {
@@ -22,8 +23,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     _loginViewModel = LoginViewModel();
-    _controllerEmail.addListener(() {
-
+    _controllerPassword.addListener(() {
+      _loginViewModel!.updatePasswordAllert(_controllerPassword.text);
     });
   }
 
@@ -54,10 +55,14 @@ class _LoginPageState extends State<LoginPage> {
                 valueListenable: _loginViewModel!.passwordAlert,
                 builder: (context, alert, _){
                   if(alert.isNotEmpty){
-                    return Text(
-                      alert,
-                      style: const TextStyle(fontSize: 15, color: Colors.red),
-                    );
+                    if(alert.length < 6){
+                      return const Text(
+                        "A senha precisa ter pelo menos 6 caracteres",
+                        style: TextStyle(fontSize: 15, color: Colors.red),
+                      );
+                    } else{
+                      return const Center();
+                    }
                   } else{
                     return const Center();
                   }
@@ -70,8 +75,16 @@ class _LoginPageState extends State<LoginPage> {
                 textColor: Colors.white,
                 width: Utils.getMaxWidth(context),
                 press: (){
-                  var result = _loginViewModel!.login(_controllerEmail.text, _controllerPassword.text);
-                  print("retorno: "+ result.toString());
+                  if(_controllerEmail.text.isEmpty || _controllerPassword.text.isEmpty){
+                    Utils.showMessageDialog(context, "Informe o e-mail e a senha", Colors.red);
+                  } else{
+                    var result = _loginViewModel!.loginTest(_controllerEmail.text, _controllerPassword.text);
+                    if(result){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>const HomePage()));
+                    } else{
+                      Utils.showMessageDialog(context, "E-mail ou senha incorretos", Colors.red);
+                    }
+                  }
                 },
               )
             ],

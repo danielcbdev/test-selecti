@@ -10,10 +10,22 @@ class LoginViewModel{
   final passwordAlert = ValueNotifier<String>("");
   final LoginRepository loginRepository = LoginRepository();
 
+  updatePasswordAllert(String newPassword){
+    passwordAlert.value = newPassword;
+  }
+
+  bool loginTest(String email, String password){
+    if(email == "test@email.com" && password == "12345678") {
+      return true;
+    } else{
+      return false;
+    }
+  }
+
   UserModel? login(String email, String password){
-    if(email == "daniel@email.com" && password == "123") {
-      Map<String, dynamic>? result = loginRepository.getResponse();
-      return UserModel.fromJson(jsonDecode(result.toString()));
+    if(email == "test@email.com" && password == "12345678") {
+      Map<String, dynamic>? result = loginRepository.getResponse(email, password);
+      if(result != null) return UserModel.fromJson(jsonDecode(result.toString()));
     }
   }
 }
