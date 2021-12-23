@@ -86,7 +86,10 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   }
                 },
-              )
+              ),
+              const SizedBox(height: 10,),
+              const Text("Email correto: test@email.com", style: TextStyle(color: Colors.red),),
+              const Text("Senha correta: 12345678", style: TextStyle(color: Colors.red),),
             ],
           ),
         )
