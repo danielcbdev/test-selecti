@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:mockito/mockito.dart';
 
 class LoginRepository {
   Map<String, dynamic>? getResponse(){

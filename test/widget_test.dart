@@ -5,17 +5,17 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'dart:convert';
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:test_selecti/model/user_model.dart';
 import 'package:test_selecti/repository/login_repository.dart';
+import 'package:test_selecti/viewmodel/login_viewmodel.dart';
 import 'widget_test.mocks.dart';
 
 @GenerateMocks([
-  LoginRepository
+  LoginRepository,
+  LoginViewModel,
 ], customMocks: [
   MockSpec<LoginRepository>(as: #MockMockitoExampleRelaxed, returnNullOnMissingStub: true),
 ])
@@ -29,39 +29,27 @@ void main(){
 
     expect(loginRepository.getResponse(), isA<Map>());
   });
-}
 
+  test('verifica se retorna uma senha falsa', () async {
 
-/*
+    late LoginRepository loginRepository = MockLoginRepository();
 
-@GenerateMocks([
-  MockitoTest
-], customMocks: [
-  MockSpec<MockitoTest>(as: #MockMockitoExampleRelaxed, returnNullOnMissingStub: true),
-])
-void main(){
-  test('verifica se o retorno é um map', () async {
+    when(loginRepository.getResponse())
+        .thenReturn({"message": "senha invalida"});
 
-    late MockitoTest mockitoExample = MockMockitoTest();
+    expect(loginRepository.getResponse(), {"message": "senha invalida"});
+  });
 
-    when(mockitoExample.getResponse())
-    .thenReturn({"title": "test"});
+  test('verifica o parse é realizado', () async {
 
-    expect(mockitoExample.getResponse(), isA<Map>());
+    late LoginViewModel loginViewModel = MockLoginViewModel();
+
+    String email = "daniel@email.com";
+    String password = "123";
+
+    when(loginViewModel.login(email, password))
+        .thenReturn(UserModel.fromJson({"id": "123", "name": "test", "username": "test", "email": "test@email.com"}));
+
+    expect(loginViewModel.login(email, password), isA<UserModel>());
   });
 }
-
-class MockitoTest {
-  Map<String, dynamic>? getResponse(){
-    Future<http.Response> response = http.get(Uri.parse("https://jsonplaceholder.typicode.com/users/"));
-    response.then((value) {
-      if (value.statusCode == 200) {
-        Map<String, dynamic> data = json.decode(value.body);
-        return data;
-      }
-    });
-  }
-}
-
-
- */
