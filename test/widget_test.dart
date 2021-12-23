@@ -11,19 +11,28 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:test_selecti/repository/login_repository.dart';
 import 'widget_test.mocks.dart';
 
+@GenerateMocks([
+  LoginRepository
+], customMocks: [
+  MockSpec<LoginRepository>(as: #MockMockitoExampleRelaxed, returnNullOnMissingStub: true),
+])
+void main(){
+  test('verifica se o retorno é um map', () async {
 
-Future fetchFromDatabase(http.Client client) async {
-  final response =
-  await client.get(Uri.parse('https://jsonplaceholder.typicode.com/users/'));
+    late LoginRepository loginRepository = MockLoginRepository();
 
-  if (response.statusCode == 200) {
-    return jsonDecode(response.body);
-  } else {
-    throw Exception('exception occured!!!!!!');
-  }
+    when(loginRepository.getResponse())
+        .thenReturn({"title": "test"});
+
+    expect(loginRepository.getResponse(), isA<Map>());
+  });
 }
+
+
+/*
 
 @GenerateMocks([
   MockitoTest
@@ -43,9 +52,7 @@ void main(){
 }
 
 class MockitoTest {
-  Map<String, dynamic>? getResponse() => test();
-
-  Map<String, dynamic>? test() {
+  Map<String, dynamic>? getResponse(){
     Future<http.Response> response = http.get(Uri.parse("https://jsonplaceholder.typicode.com/users/"));
     response.then((value) {
       if (value.statusCode == 200) {
@@ -55,3 +62,6 @@ class MockitoTest {
     });
   }
 }
+
+
+ */

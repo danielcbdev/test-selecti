@@ -3,8 +3,7 @@
 // Do not manually edit this file.
 
 import 'package:mockito/mockito.dart' as _i1;
-
-import 'widget_test.dart' as _i2;
+import 'package:test_selecti/repository/login_repository.dart' as _i2;
 
 // ignore_for_file: avoid_redundant_argument_values
 // ignore_for_file: avoid_setters_without_getters
@@ -15,16 +14,17 @@ import 'widget_test.dart' as _i2;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 
-/// A class which mocks [MockitoTest].
+/// A class which mocks [LoginRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMockitoTest extends _i1.Mock implements _i2.MockitoTest {
-  MockMockitoTest() {
+class MockLoginRepository extends _i1.Mock implements _i2.LoginRepository {
+  MockLoginRepository() {
     _i1.throwOnMissingStub(this);
   }
 }
 
-/// A class which mocks [MockitoTest].
+/// A class which mocks [LoginRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMockitoExampleRelaxed extends _i1.Mock implements _i2.MockitoTest {}
+class MockMockitoExampleRelaxed extends _i1.Mock
+    implements _i2.LoginRepository {}
